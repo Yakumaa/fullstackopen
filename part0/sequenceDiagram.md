@@ -25,4 +25,7 @@
     server-->>browser: [...,{content: "sequence diagram exercise", date: "2024-02-17T12:52:21.122Z"}]
     deactivate server
 
+    browser-->>user: Displays New Note
+    
+
   ```
