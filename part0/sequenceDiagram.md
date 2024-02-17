@@ -12,7 +12,7 @@
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
-    server-->browser: HTML document with newly added note data
+    server-->>browser: HTML document with newly added note data
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
