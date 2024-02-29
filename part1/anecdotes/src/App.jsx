@@ -14,6 +14,13 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  const points= [1,4,6,3]
+  const copy = [...points]
+
+  //increment the property 2 value by one
+  copy[2] += 1
+  console.log(copy)
+
   const handleNextClick = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
   }
