@@ -13,23 +13,33 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-
-  const points= [1,4,6,3]
-  const copy = [...points]
-
-  //increment the property 2 value by one
-  copy[2] += 1
-  console.log(copy)
+  const [vote, setVote] = useState(Array(anecdotes.length).fill(0))
 
   const handleNextClick = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
   }
 
+  const handleVoteClick = () => {
+    const copy = [...vote]
+    copy[selected] += 1
+    setVote(copy)
+    console.log(copy)
+    // console.log(vote)
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <br />
+      <p>has {vote[selected]} votes</p>
+      <button onClick={handleVoteClick}>vote</button>
       <button onClick={handleNextClick}>next anecdotes</button>
+
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[vote.indexOf(Math.max(...vote))]}
+      <br />
+      <p>has {Math.max(...vote)} votes</p>
     </div>
   )
 }
