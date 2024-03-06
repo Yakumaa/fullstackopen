@@ -9,6 +9,9 @@ const App = () => {
   const addPhonebook = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
+    if(checkPhonebook()){
+      return  
+    }
     const phonebookObject = {
       name: newName
     }
@@ -24,12 +27,9 @@ const App = () => {
   const checkPhonebook = () => {
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
+      return true
     }
   }
-
-  // if (persons.find(person => person.name === newName)) {
-  //   alert(`${newName} is already added to phonebook`)
-  // }
 
   return (
     <div>
@@ -39,7 +39,7 @@ const App = () => {
           name: <input value={newName} onChange={handlePhonebookChange}/>
         </div>
         <div>
-          <button type="submit" onSubmit={checkPhonebook}>add</button>
+          <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
