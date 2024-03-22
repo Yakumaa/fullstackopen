@@ -34,12 +34,16 @@ const PersonForm = (props) => {
   )
 }
 
-const Person = (props) => {
-  const { person, index } = props
-  // console.log(props)
+const Person = ({person, removePhonebook}) => {
+  // const { person, index } = props
+  // console.log(person)
 
   return (
-    <p key={index}>{person.name} {person.number}</p>
+    <>
+      {person.name} {person.number}
+      <button onClick={removePhonebook}>delete</button><br/>
+    </>
+    
   )
 }
 
@@ -84,6 +88,17 @@ const App = () => {
     // setNewNumber('')
   }
 
+  const removePhonebookOf = (id) => {
+    const person = persons.find(person => person.id === id)
+    if(window.confirm(`Delete ${person.name} ?`)){
+      phoneServices
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
+
   const handlePhonebookNameChange = (event) => {
     // console.log(event.target.value)
     setNewName(event.target.value)
@@ -117,8 +132,12 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm addPhonebook={addPhonebook} newName={newName} handlePhonebookNameChange={handlePhonebookNameChange} newNumber={newNumber} handlePhonebookNumberChange={handlePhonebookNumberChange}/>
       <h2>Numbers</h2>
-      {filteredPersons.map((person, index) => (
-        <Person key={index} person={person}/>
+      {filteredPersons.map((person) => (
+        <Person 
+          key={person.id} 
+          person={person}
+          removePhonebook={() => removePhonebookOf(person.id)}
+          />
       ))}
       
     </div>
