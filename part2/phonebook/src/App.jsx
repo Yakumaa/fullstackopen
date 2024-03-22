@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import phoneServices from './services/phonebook'
 
 const Filter = (props) => {
   const { searchName, handleSearchNameChange } = props
@@ -49,15 +50,14 @@ const App = () => {
   const [searchName, setSearchName] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    phoneServices
+      .getAll()
+      .then(initialPerson => {
+        // console.log('promise fulfilled')
+        setPersons(initialPerson)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+  // console.log('render', persons.length, 'persons')
 
   const addPhonebook = (event) => {
     event.preventDefault()
@@ -69,9 +69,19 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(phonebookObject))
-    setNewName('')
-    setNewNumber('')
+
+    phoneServices
+      .create(phonebookObject)
+      .then(returnedPerson => {
+        // console.log('promise fulfilled')
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+
+    // setPersons(persons.concat(phonebookObject))
+    // setNewName('')
+    // setNewNumber('')
   }
 
   const handlePhonebookNameChange = (event) => {
