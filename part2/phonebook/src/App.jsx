@@ -66,26 +66,38 @@ const App = () => {
   const addPhonebook = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
-    if(checkPhonebook()){
-      return  
-    }
+    // if(checkPhonebook()){
+    //   return  
+    // }
     const phonebookObject = {
       name: newName,
       number: newNumber
     }
 
-    phoneServices
-      .create(phonebookObject)
-      .then(returnedPerson => {
-        // console.log('promise fulfilled')
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-      })
-
-    // setPersons(persons.concat(phonebookObject))
-    // setNewName('')
-    // setNewNumber('')
+    const existingPerson = persons.find(person => person.name === newName)
+    // console.log(existingPerson)
+    if(existingPerson){
+      const confirmUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if(confirmUpdate){
+        phoneServices
+          .update(existingPerson.id, phonebookObject)
+          .then(returnedPerson => {
+            // console.log(returnedPerson)
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+        })
+      }
+    }else{
+      phoneServices
+        .create(phonebookObject)
+        .then(returnedPerson => {
+          // console.log('promise fulfilled')
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+    }
   }
 
   const removePhonebookOf = (id) => {
@@ -108,12 +120,12 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  const checkPhonebook = () => {
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return true
-    }
-  }
+  // const checkPhonebook = () => {
+  //   if (persons.find(person => person.name === newName)) {
+  //     alert(`${newName} is already added to phonebook`)
+  //     return true
+  //   }
+  // }
 
   const handleSearchNameChange = (event) => {
     // console.log(event.target.value)
