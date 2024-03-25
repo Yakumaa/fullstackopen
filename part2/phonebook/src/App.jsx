@@ -47,11 +47,24 @@ const Person = ({person, removePhonebook}) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     phoneServices
@@ -86,7 +99,19 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
-        })
+            setSuccessMessage(`Changed '${returnedPerson.name}''s number to ${returnedPerson.number}`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000);
+          })
+          // .catch(success => {
+          //   setSuccessMessage(
+          //     `Added '${persons.name}' to phonebook`
+          //   )
+          //   setTimeout(() => {
+          //     setSuccessMessage(null)
+          //   }, 5000)
+          // })
       }
     }else{
       phoneServices
@@ -96,7 +121,19 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setSuccessMessage(`Added '${returnedPerson.name}' to phonebook`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000);
         })
+        // .catch(success => {
+        //   setSuccessMessage(
+        //     `Added '${returnedPerson.name}' to phonebook`
+        //   )
+        //   setTimeout(() => {
+        //     setSuccessMessage(null)
+        //   }, 5000)
+        // })
     }
   }
 
@@ -139,6 +176,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage}/>
+
       <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange}/>
 
       <h2>add a new</h2>
