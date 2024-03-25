@@ -47,17 +47,19 @@ const Person = ({person, removePhonebook}) => {
   )
 }
 
-const Notification = ({ message }) => {
+const Notification = ({ message, type }) => {
   if (message === null) {
     return null
   }
 
+  let className = 'success'
+  if (type === 'error') {
+    className = 'error'
+  }
+
   return (
     <>
-    <div className='success'>
-      {message}
-    </div>
-    <div classname='error'>
+    <div className={className}>
       {message}
     </div>
     </>
@@ -69,8 +71,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState('success')
 
   useEffect(() => {
     phoneServices
@@ -105,19 +107,12 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
-            setSuccessMessage(`Changed '${returnedPerson.name}''s number to ${returnedPerson.number}`)
+            setMessage(`Changed '${returnedPerson.name}''s number to ${returnedPerson.number}`)
             setTimeout(() => {
-              setSuccessMessage(null)
+              setMessage(null)
             }, 5000);
           })
-          // .catch(success => {
-          //   setSuccessMessage(
-          //     `Added '${persons.name}' to phonebook`
-          //   )
-          //   setTimeout(() => {
-          //     setSuccessMessage(null)
-          //   }, 5000)
-          // })
+ 
       }
     }else{
       phoneServices
@@ -127,19 +122,11 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
-          setSuccessMessage(`Added '${returnedPerson.name}' to phonebook`)
+          setMessage(`Added '${returnedPerson.name}' to phonebook`)
           setTimeout(() => {
-            setSuccessMessage(null)
+            setMessage(null)
           }, 5000);
         })
-        // .catch(success => {
-        //   setSuccessMessage(
-        //     `Added '${returnedPerson.name}' to phonebook`
-        //   )
-        //   setTimeout(() => {
-        //     setSuccessMessage(null)
-        //   }, 5000)
-        // })
     }
   }
 
@@ -152,11 +139,12 @@ const App = () => {
           setPersons(persons.filter(person => person.id !== id))
         })
         .catch(error => {
-          setErrorMessage(
+          setMessage(
             `Information of '${person.name}' has already been removed from server`
           )
+          setMessageType('error')
           setTimeout(() => {
-            setErrorMessage(null)
+            setMessage(null)
           }, 5000)
         })
     }
@@ -190,8 +178,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage}/>
-      <Notification message={errorMessage}/>
+      <Notification message={message} type={messageType}/>
+      {/* <Notification message={errorMessage}/> */}
 
       <Filter searchName={searchName} handleSearchNameChange={handleSearchNameChange}/>
 
