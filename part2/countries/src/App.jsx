@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Search = (props) => {
+  console.log(props)
+  const {searchCountry, handleSearchCountryChange } = props
+  
+  return (
+    <form>
+      <div>
+        find countries <input value={searchCountry} onChange={handleSearchCountryChange}/>
+      </div>
+    </form>
+  )
+}
+
+const Country = (props) => {
+  console.log(props)
+  const {country} = props
+  console.log(country)
+  return (
+    <>
+    {country.name}
+    </>
+  )
+}
+
+const App = () => {
+  const [countries, setCountries] = useState([])
+  const [searchCountry, setSearchCountry] = useState('')
+
+  useEffect(() => {
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then(response => {
+        console.log(response)
+        setCountries(response.data)
+      })
+  }, [])
+
+  const handleSearchCountryChange = (event) => {
+    setSearchCountry(event.target.value)
+  }
+
+  const filteredCountry = countries.filter(country =>
+    typeof country.name === 'string' && country.name.toLowerCase().includes(searchCountry.toLowerCase())
+  )
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Search searchCountry={searchCountry} handleSearchCountryChange={handleSearchCountryChange}/>
+      {filteredCountry.map((country) => (
+        <Country 
+          key={country.id}
+          country={country}
+        />
+      ))}
     </>
   )
 }
