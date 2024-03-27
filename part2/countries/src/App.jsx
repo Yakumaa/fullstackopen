@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const Search = (props) => {
-  console.log(props)
+  // console.log(props)
   const {searchCountry, handleSearchCountryChange } = props
   
   return (
@@ -15,12 +15,12 @@ const Search = (props) => {
 }
 
 const Country = (props) => {
-  console.log(props)
+  // console.log(props)
   const {country} = props
-  console.log(country)
+  // console.log(country)
   return (
     <>
-    {country.name}
+    {country.name.common}<br/>
     </>
   )
 }
@@ -43,15 +43,18 @@ const App = () => {
   }
 
   const filteredCountry = countries.filter(country =>
-    typeof country.name === 'string' && country.name.toLowerCase().includes(searchCountry.toLowerCase())
+    country.name.common.toLowerCase().includes(searchCountry.toLowerCase())
   )
+  console.log(filteredCountry)
 
   return (
     <>
       <Search searchCountry={searchCountry} handleSearchCountryChange={handleSearchCountryChange}/>
-      {filteredCountry.map((country) => (
+      {searchCountry && filteredCountry.length > 10
+        ? <p>Too many matches, specify another filter</p>
+        : filteredCountry.map((country) => (
         <Country 
-          key={country.id}
+          key={country.cca3}
           country={country}
         />
       ))}
