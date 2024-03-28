@@ -17,10 +17,13 @@ const Search = (props) => {
 const Country = (props) => {
   // console.log(props)
   const {country} = props
-  console.log(country)
+  const [showDetails, setShowDetails] = useState(false)
+  // console.log(country)
   return (
     <>
-    {country.name.common}<br/>
+    {country.name.common}
+    <button onClick={() => setShowDetails(!showDetails)}>Show</button><br/>
+    {showDetails && <CountryDetail country={country}/>}
     </>
   )
 }
@@ -38,7 +41,7 @@ const CountryDetail = (props) => {
           <li key={index}>{language}</li>
         ))}
       </ul>
-      <img src={country.flags.png} alt="Country Flag" width="200" height="200"/>
+      <img src={country.flags.png} alt="Country Flag"/>
     </div>
   )
 }
