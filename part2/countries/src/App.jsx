@@ -17,11 +17,29 @@ const Search = (props) => {
 const Country = (props) => {
   // console.log(props)
   const {country} = props
-  // console.log(country)
+  console.log(country)
   return (
     <>
     {country.name.common}<br/>
     </>
+  )
+}
+
+const CountryDetail = (props) => {
+  const {country} = props
+  return (
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>capital {country.capital}</p>
+      <p>area {country.area}</p>
+      <h2>languages</h2>
+      <ul>
+        {Object.values(country.languages).map((language, index) => (
+          <li key={index}>{language}</li>
+        ))}
+      </ul>
+      <img src={country.flags.png} alt="Country Flag" width="200" height="200"/>
+    </div>
   )
 }
 
@@ -47,17 +65,27 @@ const App = () => {
   )
   console.log(filteredCountry)
 
-  return (
-    <>
-      <Search searchCountry={searchCountry} handleSearchCountryChange={handleSearchCountryChange}/>
-      {searchCountry && filteredCountry.length > 10
-        ? <p>Too many matches, specify another filter</p>
-        : filteredCountry.map((country) => (
+  let displayCountries = null;
+  if (searchCountry !== '') {
+    if (filteredCountry.length > 10) {
+      displayCountries = <p>Too many matches, specify another filter</p>
+    }else if (filteredCountry.length === 1) {
+      displayCountries = <CountryDetail country={filteredCountry[0]}/>
+    }
+    else {
+      displayCountries = filteredCountry.map((country) => (
         <Country 
           key={country.cca3}
           country={country}
         />
-      ))}
+      ))
+    }
+  }
+
+  return (
+    <>
+      <Search searchCountry={searchCountry} handleSearchCountryChange={handleSearchCountryChange}/>
+      {displayCountries}
     </>
   )
 }
