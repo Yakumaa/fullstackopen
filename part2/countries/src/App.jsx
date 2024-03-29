@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Country, {CountryDetail} from './components/Country'
+import Weather from './components/Weather'
 
 const Search = (props) => {
   // console.log(props)
@@ -11,38 +13,6 @@ const Search = (props) => {
         find countries <input value={searchCountry} onChange={handleSearchCountryChange}/>
       </div>
     </form>
-  )
-}
-
-const Country = (props) => {
-  // console.log(props)
-  const {country} = props
-  const [showDetails, setShowDetails] = useState(false)
-  // console.log(country)
-  return (
-    <>
-    {country.name.common}
-    <button onClick={() => setShowDetails(!showDetails)}>Show</button><br/>
-    {showDetails && <CountryDetail country={country}/>}
-    </>
-  )
-}
-
-const CountryDetail = (props) => {
-  const {country} = props
-  return (
-    <div>
-      <h1>{country.name.common}</h1>
-      <p>capital {country.capital}</p>
-      <p>area {country.area}</p>
-      <h2>languages</h2>
-      <ul>
-        {Object.values(country.languages).map((language, index) => (
-          <li key={index}>{language}</li>
-        ))}
-      </ul>
-      <img src={country.flags.png} alt="Country Flag"/>
-    </div>
   )
 }
 
@@ -73,7 +43,8 @@ const App = () => {
     if (filteredCountry.length > 10) {
       displayCountries = <p>Too many matches, specify another filter</p>
     }else if (filteredCountry.length === 1) {
-      displayCountries = <CountryDetail country={filteredCountry[0]}/>
+      displayCountries = <CountryDetail country={filteredCountry[0]}/> && <Weather country={filteredCountry[0]}/>
+      
     }
     else {
       displayCountries = filteredCountry.map((country) => (
@@ -89,6 +60,7 @@ const App = () => {
     <>
       <Search searchCountry={searchCountry} handleSearchCountryChange={handleSearchCountryChange}/>
       {displayCountries}
+      
     </>
   )
 }
