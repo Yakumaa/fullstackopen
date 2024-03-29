@@ -43,8 +43,7 @@ const App = () => {
     if (filteredCountry.length > 10) {
       displayCountries = <p>Too many matches, specify another filter</p>
     }else if (filteredCountry.length === 1) {
-      displayCountries = <CountryDetail country={filteredCountry[0]}/> && <Weather country={filteredCountry[0]}/>
-      
+      displayCountries =  <><CountryDetail country={filteredCountry[0]}/> <Weather country={filteredCountry[0]}/></>      
     }
     else {
       displayCountries = filteredCountry.map((country) => (
