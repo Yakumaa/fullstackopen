@@ -72,7 +72,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
   const [message, setMessage] = useState(null)
-  const [messageType, setMessageType] = useState('success')
+  const [messageType, setMessageType] = useState('')
 
   useEffect(() => {
     phoneServices
@@ -108,9 +108,18 @@ const App = () => {
             setNewName('')
             setNewNumber('')
             setMessage(`Changed '${returnedPerson.name}''s number to ${returnedPerson.number}`)
+            setMessageType('success')
             setTimeout(() => {
               setMessage(null)
             }, 5000);
+          })
+          .catch(error => {
+            console.log(error.response.data.error)
+            setMessage(error.response.data.error)
+            setMessageType('error')
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
  
       }
@@ -123,9 +132,18 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           setMessage(`Added '${returnedPerson.name}' to phonebook`)
+          setMessageType('success')
           setTimeout(() => {
             setMessage(null)
           }, 5000);
+        })
+        .catch(error => {
+          console.log(error.response.data.error)
+          setMessage(error.response.data.error)
+          setMessageType('error')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
     }
   }
